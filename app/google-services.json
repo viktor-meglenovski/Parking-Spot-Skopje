@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1045379523457",
+    "firebase_url": "https://parkingspotskopje-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "parkingspotskopje",
+    "storage_bucket": "parkingspotskopje.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045379523457:android:919240e0265e821c7cbe80",
+        "android_client_info": {
+          "package_name": "com.example.parkingspotskopje"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045379523457-6bkpvm8fknqisk7q99vtkq5bra07jfqk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parkingspotskopje",
+            "certificate_hash": "1b4a4dd5ced778e20cd01215e3aa19562eceb82e"
+          }
+        },
+        {
+          "client_id": "1045379523457-qsifjt6hvm3f9dib937ksg338fcs1v5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdHEenTynmlCpd4074SMw-a__P57nm7k4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045379523457-qsifjt6hvm3f9dib937ksg338fcs1v5u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
