@@ -63,6 +63,8 @@ dependencies {
 
     implementation 'org.apache.commons:commons-csv:1.5'
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
+
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'

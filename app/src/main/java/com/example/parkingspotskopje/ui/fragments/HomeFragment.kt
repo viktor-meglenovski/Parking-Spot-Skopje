@@ -3,8 +3,6 @@ package com.example.parkingspotskopje.ui.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.parkingspotskopje.R
@@ -34,7 +32,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.listAllParkingsBtn.setOnClickListener{
             parentFragmentManager.commit {
-                replace(R.id.fragment_container_view, ListAllParkingsFragment())
+                replace(R.id.fcv, ListAllParkingsFragment())
                 setReorderingAllowed(true)
                 addToBackStack(null)
             }
@@ -42,7 +40,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.favoritesBtn.setOnClickListener{
             parentFragmentManager.commit {
-                replace(R.id.fragment_container_view, FavoritesFragment())
+                replace(R.id.fcv, FavoritesFragment())
                 setReorderingAllowed(true)
                 addToBackStack(null)
             }

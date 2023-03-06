@@ -1,13 +1,16 @@
 package com.example.parkingspotskopje.domain.model
 
-data class Parking (
-    val ID:String,
-    val name:String,
-    val fee:String,
-    val lat:Double,
-    val lon:Double,
-    val maxCapacity:Int,
-    val currentCapacity:Int)
+import java.io.Serializable
+
+data class Parking(
+    var name:String = "",
+    var fee:String = "",
+    var lat:Double = 0.0,
+    var lon:Double = 0.0,
+    var maxCapacity:Int = 0,
+    var currentCapacity:Int = 0
+) : Serializable
 {
-    constructor() : this("", "", "", 0.0, 0.0, 0,0)
+    var id:String = ""
+    var distance:Double=0.0
 }
