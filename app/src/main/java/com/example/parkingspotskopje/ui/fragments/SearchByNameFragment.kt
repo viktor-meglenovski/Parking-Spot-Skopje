@@ -3,36 +3,34 @@ package com.example.parkingspotskopje.ui.fragments
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.parkingspotskopje.R
-import com.example.parkingspotskopje.databinding.FragmentFavoritesBinding
+import com.example.parkingspotskopje.databinding.FragmentSearchByNameBinding
 import com.example.parkingspotskopje.domain.adapters.OnItemClickListener
 import com.example.parkingspotskopje.domain.adapters.ParkingListAdapter
 import com.example.parkingspotskopje.domain.model.Parking
 import com.example.parkingspotskopje.ui.activities.ParkingActivity
 import com.example.parkingspotskopje.viewmodels.LocationViewModel
 import com.example.parkingspotskopje.viewmodels.ParkingListViewModel
-import com.google.firebase.auth.FirebaseAuth
 
-class FavoritesFragment:Fragment(R.layout.fragment_favorites) {
-    private var _binding: FragmentFavoritesBinding?=null
+class SearchByNameFragment: Fragment(R.layout.fragment_search_by_name) {
+    private var _binding: FragmentSearchByNameBinding?=null
     private val binding get()=_binding!!
+
     private lateinit var parkingListAdapter: ParkingListAdapter
 
-    private lateinit var parkingListViewModel: ParkingListViewModel
+    private val parkingListViewModel: ParkingListViewModel by activityViewModels()
     private lateinit var locationViewModel: LocationViewModel
-    private lateinit var auth: FirebaseAuth
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding= FragmentFavoritesBinding.bind(view)
-        parkingListViewModel=ViewModelProvider(this)[ParkingListViewModel::class.java]
-
-        auth = FirebaseAuth.getInstance()
+        _binding= FragmentSearchByNameBinding.bind(view)
         binding.recyclerViewListParkings.layoutManager= LinearLayoutManager(context)
 
         val clicker = object: OnItemClickListener {
@@ -47,10 +45,10 @@ class FavoritesFragment:Fragment(R.layout.fragment_favorites) {
         parkingListAdapter= ParkingListAdapter(ArrayList<Parking>(),clicker)
         binding.recyclerViewListParkings.adapter=parkingListAdapter
 
-        parkingListViewModel.getFavoriteParkings(auth.currentUser!!.email!!).observe(viewLifecycleOwner) {
+        parkingListViewModel.getAllParkings().observe(viewLifecycleOwner) {
             parkingListAdapter.updateParkings(it.sortedBy { x->x.distance })
         }
-        locationViewModel = ViewModelProvider(this)[LocationViewModel::class.java]
+        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
         locationViewModel.startLocationUpdates(requireContext()) { permissionGranted ->
             if (permissionGranted) {
                 locationViewModel.locationData.observe(viewLifecycleOwner) { location ->
@@ -63,6 +61,18 @@ class FavoritesFragment:Fragment(R.layout.fragment_favorites) {
                 println("permissions denied")
             }
         }
+        binding.searchBox.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                parkingListViewModel.getParkingsByName(s.toString()).observe(viewLifecycleOwner) {
+                    parkingListAdapter.updateParkings(it.sortedBy { x->x.distance })
+                }
+            }
+        })
 
 
     }
@@ -89,5 +99,4 @@ class FavoritesFragment:Fragment(R.layout.fragment_favorites) {
             }
         }
     }
-
 }

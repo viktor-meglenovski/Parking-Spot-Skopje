@@ -24,6 +24,25 @@ class ParkingRepository {
             }
         })
     }
+    fun getParkingsByName(name:String, callback: (List<Parking>) -> Unit){
+        database.child("parkings").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val parkings = mutableListOf<Parking>()
+                for (parkingSnapshot in snapshot.children) {
+                    val parking = parkingSnapshot.getValue(Parking::class.java)
+                    if(parking?.name!!.toLowerCase().contains(name.toLowerCase())){
+                        parking?.id = parkingSnapshot.key ?: ""
+                        parkings.add(parking!!)
+                    }
+                }
+                callback(parkings)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(emptyList())
+            }
+        })
+    }
     fun getParkingsById(ids:List<String>,callback: (List<Parking>) -> Unit){
         database.child("parkings").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

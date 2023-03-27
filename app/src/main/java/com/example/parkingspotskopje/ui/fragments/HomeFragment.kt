@@ -45,5 +45,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 addToBackStack(null)
             }
         }
+        binding.searchByNameBtn.setOnClickListener{
+            parentFragmentManager.commit {
+                replace(R.id.fcv, SearchByNameFragment())
+                setReorderingAllowed(true)
+                addToBackStack(null)
+            }
+        }
+
+        binding.searchByRegionBtn.setOnClickListener{
+            parentFragmentManager.commit {
+                replace(R.id.fcv, SearchByRegionFragment())
+                setReorderingAllowed(true)
+                addToBackStack(null)
+            }
+        }
     }
 }

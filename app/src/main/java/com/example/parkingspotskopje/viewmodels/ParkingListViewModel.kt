@@ -34,6 +34,13 @@ class ParkingListViewModel: ViewModel() {
         return parkingListLiveData
     }
 
+    fun getParkingsByName(name:String):LiveData<List<Parking>> {
+        parkingRepository.getParkingsByName(name) { parkings ->
+            parkingListLiveData.postValue(parkings)
+        }
+        return parkingListLiveData
+    }
+
     fun updateDistanceForAllParkings(location:Location) {
         var parkings = parkingListLiveData.value ?: ArrayList()
         for (p: Parking in parkings) {
