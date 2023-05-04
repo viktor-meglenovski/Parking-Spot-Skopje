@@ -7,10 +7,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.parkingspotskopje.R
 import com.example.parkingspotskopje.databinding.FragmentHomeBinding
+import com.example.parkingspotskopje.domain.repository.ParkingRepository
 import com.example.parkingspotskopje.ui.activities.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
+
+    private val parkingRepository = ParkingRepository()
+
     private lateinit var auth: FirebaseAuth
     private var _binding:FragmentHomeBinding? = null
     private val binding get() = _binding!!

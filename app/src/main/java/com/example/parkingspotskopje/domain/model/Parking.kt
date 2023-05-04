@@ -9,7 +9,9 @@ data class Parking(
     var lon:Double = 0.0,
     var maxCapacity:Int = 0,
     var currentCapacity:Int = 0,
-    var region:String = ""
+    var region:String = "",
+    var rating:Double = 0.0,
+    var totalRatings:Int = 0
 ) : Serializable
 {
     var id:String = ""

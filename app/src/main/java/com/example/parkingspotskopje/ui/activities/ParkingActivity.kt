@@ -20,7 +20,9 @@ class ParkingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parking)
-        parkingViewModel.setParking(intent.getSerializableExtra("parking") as Parking)
+        val parking=intent.getSerializableExtra("parking") as Parking
+        parkingViewModel.setParking(parking)
+        parkingViewModel.getAllReviewsForParking(parking.id)
 
         tabLayout=findViewById(R.id.tabLayout)
         viewPager=findViewById(R.id.viewPager)

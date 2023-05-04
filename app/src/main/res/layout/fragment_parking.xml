@@ -8,12 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <RelativeLayout
             android:id="@+id/rlTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -29,18 +29,20 @@
 
             <ImageView
                 android:id="@+id/bookmark"
-                android:layout_width="match_parent"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_toEndOf="@+id/tvName"
+                android:layout_alignParentEnd="true"
                 android:gravity="end"
                 android:src="@drawable/heart" />
         </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/rlRegion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             app:layout_constraintTop_toBottomOf="@+id/rlTitle">
 
             <TextView
@@ -80,15 +82,39 @@
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tvRatingData"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:id="@+id/linearLayoutStars"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/tvRating"
-                android:gravity="right"
-                android:padding="5dip"
-                android:text="data" />
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true">
+
+                <TextView
+                    android:id="@+id/tvRatingData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:padding="5dip"
+                    android:text="data" />
+
+                <ImageView
+                    android:id="@+id/imageStar1"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:paddingTop="0dp"
+                    android:src="@drawable/star_full" />
+
+                <TextView
+                    android:id="@+id/tvNumberOfRatings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:padding="5dip"
+                    android:text="data" />
+
+            </LinearLayout>
         </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/rlFee"

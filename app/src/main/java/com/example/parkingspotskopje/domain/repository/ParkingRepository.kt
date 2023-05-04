@@ -1,10 +1,13 @@
 package com.example.parkingspotskopje.domain.repository
 
 import com.example.parkingspotskopje.domain.model.Parking
+import com.example.parkingspotskopje.domain.model.Review
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ParkingRepository {
     private val database = FirebaseDatabase.getInstance().reference
@@ -103,6 +106,57 @@ class ParkingRepository {
             getParkingsById(parkingIds){
                 callback(it)
             }
+        }
+    }
+    fun getReviewsForParking(parkingId:String, callback: (List<Review>) -> Unit){
+        database.child("reviews").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val reviews = mutableListOf<Review>()
+                for (reviewSnapshot in snapshot.children) {
+                    val review = reviewSnapshot.getValue(Review::class.java)
+                    if(review?.parkingId == parkingId){
+                        review?.id = reviewSnapshot.key ?: ""
+                        reviews.add(review)
+                    }
+                }
+                callback(reviews)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                callback(emptyList())
+            }
+        })
+    }
+
+    fun addReview(parkingId: String,userId:String,userName:String,stars:Int,comment:String,callback: (String) -> Unit){
+        val currentDate = Date()
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm")
+        val formattedDateTime = dateFormat.format(currentDate)
+        var newReview= Review(parkingId,userId,userName,stars,comment,formattedDateTime)
+        database.child("reviews").push().setValue(newReview)
+        getCurrentRatingForParking(parkingId) { rating ->
+            getCurrentTotalRatingsForParking(parkingId) { totalRatings ->
+                val updates = mapOf<String, Any>("rating" to rating, "totalRatings" to totalRatings)
+                database.child("parkings").child(parkingId).updateChildren(updates)
+                callback(parkingId)
+            }
+        }
+    }
+
+    fun getCurrentRatingForParking(parkingId: String, callback: (Double) -> Unit) {
+        var result=0.0
+        getReviewsForParking(parkingId) { reviews->
+            reviews.forEach{r->
+                result+=r.stars
+            }
+            result/=reviews.size
+            callback(result)
+        }
+
+    }
+    fun getCurrentTotalRatingsForParking(parkingId: String, callback: (Int) -> Unit) {
+        getReviewsForParking(parkingId) { reviews ->
+            val totalRatings = reviews.size
+            callback(totalRatings)
         }
     }
 }

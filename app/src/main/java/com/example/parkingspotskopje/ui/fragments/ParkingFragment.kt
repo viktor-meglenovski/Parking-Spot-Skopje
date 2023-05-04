@@ -37,6 +37,8 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
             binding.tvMaxCapData.text=parking?.maxCapacity.toString()
             binding.tvCurrCapData.text=parking?.currentCapacity.toString()
             binding.tvRegionData.text=parking?.region
+            binding.tvRatingData.text=String.format("%.2f", parking?.rating)
+            binding.tvNumberOfRatings.text="("+parking?.totalRatings+")"
             if(parking!!.distance<1){
                 var metersDouble=parking!!.distance*1000
                 var meters=metersDouble.roundToInt()
