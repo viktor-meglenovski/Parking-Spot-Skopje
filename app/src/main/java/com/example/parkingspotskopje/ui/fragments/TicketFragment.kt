@@ -2,26 +2,28 @@ package com.example.parkingspotskopje.ui.fragments
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.parkingspotskopje.R
-import com.example.parkingspotskopje.databinding.FragmentCurrentTicketBinding
+import com.example.parkingspotskopje.databinding.FragmentTicketBinding
 import com.example.parkingspotskopje.domain.repository.TicketRepository
+import com.example.parkingspotskopje.ui.activities.HomeActivity
 import com.example.parkingspotskopje.ui.notifications.NotificationScheduler
 import com.google.firebase.auth.FirebaseAuth
 
-class CurrentTicketFragment: Fragment(R.layout.fragment_current_ticket) {
-    private var _binding:FragmentCurrentTicketBinding?=null
+class TicketFragment: Fragment(R.layout.fragment_current_ticket) {
+    private var _binding: FragmentTicketBinding?=null
     private val binding get()=_binding!!
-    private lateinit var auth:FirebaseAuth
+    private lateinit var auth: FirebaseAuth
     private val ticketRepository: TicketRepository = TicketRepository()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding=FragmentCurrentTicketBinding.bind(view)
-        auth=FirebaseAuth.getInstance()
+        _binding= FragmentTicketBinding.bind(view)
+        auth= FirebaseAuth.getInstance()
         ticketRepository.getCurrentActiveTicket(auth.currentUser?.email!!){
             binding.tvParkingNameData.text=it!!.parkingName
             binding.tvFromData.text=it!!.fromTime
@@ -39,7 +41,9 @@ class CurrentTicketFragment: Fragment(R.layout.fragment_current_ticket) {
                     }
                     dialog.dismiss()
                     NotificationScheduler.cancelNotifications(requireContext())
-                    requireActivity().supportFragmentManager.popBackStack()
+                    val intent = Intent(context, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    requireContext().startActivity(intent)
                 }
 
                 builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->

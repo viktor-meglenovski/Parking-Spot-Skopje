@@ -1,6 +1,9 @@
 package com.example.parkingspotskopje.ui.fragments
 
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.PendingIntent
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +15,7 @@ import com.example.parkingspotskopje.R
 import com.example.parkingspotskopje.databinding.FragmentParkingBinding
 import com.example.parkingspotskopje.domain.repository.BookmarkRepository
 import com.example.parkingspotskopje.domain.repository.TicketRepository
+import com.example.parkingspotskopje.ui.notifications.NotificationScheduler
 import com.example.parkingspotskopje.viewmodels.ParkingViewModel
 import com.google.firebase.auth.FirebaseAuth
 import org.osmdroid.config.Configuration
@@ -29,6 +33,8 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
     private val bookmarkRepository:BookmarkRepository=BookmarkRepository()
     private val ticketRepository:TicketRepository= TicketRepository()
     private lateinit var auth:FirebaseAuth
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding=FragmentParkingBinding.bind(view)
@@ -117,6 +123,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                     ticketRepository.addTicket(parking.id,parking.name,auth.currentUser!!.email!!){
                         parkingViewModel.getParking(parking.id)
                     }
+                    NotificationScheduler.scheduleNotification(requireContext())
                     dialog.dismiss()
                 }
 
@@ -130,6 +137,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
 
 
 
+
             binding.btnReleaseSpot.setOnClickListener(){
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Confirmation")
@@ -139,6 +147,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                     ticketRepository.finishTicket(parking.id,auth.currentUser!!.email!!){
                         parkingViewModel.getParking(parking.id)
                     }
+                    NotificationScheduler.cancelNotifications(requireContext())
                     dialog.dismiss()
                 }
 

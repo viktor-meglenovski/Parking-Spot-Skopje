@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Active Ticket"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+
+        <RelativeLayout
+            android:id="@+id/rlParkingName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvName">
+
+            <TextView
+                android:id="@+id/tvParkingName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:padding="5dip"
+                android:text="Parking"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvParkingNameData"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tvParkingName"
+                android:gravity="right"
+                android:padding="5dip"
+                android:text="data" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rlFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/rlParkingName">
+
+            <TextView
+                android:id="@+id/tvFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:padding="5dip"
+                android:text="From"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvFromData"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tvFrom"
+                android:gravity="right"
+                android:padding="5dip"
+                android:text="data" />
+        </RelativeLayout>
+        <Button
+            android:id="@+id/btnReleaseSpot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Release your spot"
+            android:layout_margin="10dp"
+            app:layout_constraintTop_toBottomOf="@id/rlFrom"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
