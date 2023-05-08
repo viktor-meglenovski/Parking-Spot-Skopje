@@ -1,7 +1,9 @@
 package com.example.parkingspotskopje.domain.repository
 
+import com.example.parkingspotskopje.domain.enumerations.Status
 import com.example.parkingspotskopje.domain.model.Parking
 import com.example.parkingspotskopje.domain.model.Review
+import com.example.parkingspotskopje.domain.model.Ticket
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -159,4 +161,6 @@ class ParkingRepository {
             callback(totalRatings)
         }
     }
+
+
 }

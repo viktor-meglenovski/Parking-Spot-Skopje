@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -238,6 +239,44 @@
                 android:padding="5dip"
                 android:text="data" />
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnGetSpot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Get a spot"
+            app:layout_constraintTop_toBottomOf="@id/rlCurrCap" />
+
+        <Button
+            android:id="@+id/btnReleaseSpot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Release your spot"
+            app:layout_constraintTop_toBottomOf="@id/rlCurrCap" />
+
+        <Button
+            android:id="@+id/btnNotifyMe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Notify my when a spot is free"
+            app:layout_constraintTop_toBottomOf="@id/rlCurrCap" />
+        <TextView
+            android:id="@+id/tvNotify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="You will be notified when a spot has been released."
+            app:layout_constraintTop_toBottomOf="@+id/rlCurrCap"/>
+        <TextView
+            android:id="@+id/tvAlreadyHasTicket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="You already have and active ticket at a different parking!"
+            app:layout_constraintTop_toBottomOf="@+id/rlCurrCap"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

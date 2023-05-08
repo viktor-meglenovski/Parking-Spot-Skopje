@@ -18,4 +18,15 @@
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="32dp"
         android:layout_below="@+id/addReviewBtn" />
+    <TextView
+        android:id="@+id/tvNoReviewsMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="There are no reviews for this parking! Be the first to rate this parking by clicking the button above!"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/addReviewBtn"/>
 </RelativeLayout>

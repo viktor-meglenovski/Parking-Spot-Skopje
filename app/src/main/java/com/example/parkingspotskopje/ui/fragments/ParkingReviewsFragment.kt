@@ -42,10 +42,12 @@ class ParkingReviewsFragment: Fragment(R.layout.fragment_parking_reviews) {
 
         parkingViewModel.reviews.observe(viewLifecycleOwner){
             reviewsListAdapter.updateList(it.sortedByDescending { x->x.timestamp })
+            if(reviewsListAdapter.itemCount==0){
+                binding.tvNoReviewsMessage.visibility=View.VISIBLE
+            }else{
+                binding.tvNoReviewsMessage.visibility=View.GONE
+            }
         }
-
-        //TODO if no reviews, add message
-
     }
 
 }

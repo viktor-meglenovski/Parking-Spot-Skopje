@@ -1,5 +1,7 @@
 package com.example.parkingspotskopje.ui.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.parkingspotskopje.R
 import com.example.parkingspotskopje.databinding.FragmentParkingBinding
 import com.example.parkingspotskopje.domain.repository.BookmarkRepository
+import com.example.parkingspotskopje.domain.repository.TicketRepository
 import com.example.parkingspotskopje.viewmodels.ParkingViewModel
 import com.google.firebase.auth.FirebaseAuth
 import org.osmdroid.config.Configuration
@@ -24,6 +27,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
     private val binding get()=_binding!!
     private val parkingViewModel: ParkingViewModel by activityViewModels()
     private val bookmarkRepository:BookmarkRepository=BookmarkRepository()
+    private val ticketRepository:TicketRepository= TicketRepository()
     private lateinit var auth:FirebaseAuth
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,13 +87,116 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                     if(it){
                         binding.bookmark.setImageResource(R.drawable.heart_empty)
                         bookmarkRepository.deleteBookmark(userId,parking.id)
+                        val builder = AlertDialog.Builder(requireContext())
+                        builder.setTitle("Bookmark successfully removed!")
+                        builder.setPositiveButton("OK") { dialog: DialogInterface, which: Int ->
+                            dialog.dismiss()
+                        }
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
 
                     }else{
                         binding.bookmark.setImageResource(R.drawable.heart)
                         bookmarkRepository.insertBookmark(userId, parking.id)
+                        val builder = AlertDialog.Builder(requireContext())
+                        builder.setTitle("Bookmark successfully added!")
+                        builder.setPositiveButton("OK") { dialog: DialogInterface, which: Int ->
+                            dialog.dismiss()
+                        }
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
                     }
                 }
             }
+            binding.btnGetSpot.setOnClickListener(){
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Confirmation")
+                builder.setMessage("Are you sure you want to book a spot?")
+
+                builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+                    ticketRepository.addTicket(parking.id,parking.name,auth.currentUser!!.email!!){
+                        parkingViewModel.getParking(parking.id)
+                    }
+                    dialog.dismiss()
+                }
+
+                builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+                    // Handle Cancel button click here
+                    dialog.dismiss()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
+
+
+            binding.btnReleaseSpot.setOnClickListener(){
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Confirmation")
+                builder.setMessage("Are you sure you want to release your spot?")
+
+                builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+                    ticketRepository.finishTicket(parking.id,auth.currentUser!!.email!!){
+                        parkingViewModel.getParking(parking.id)
+                    }
+                    dialog.dismiss()
+                }
+
+                builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+                    // Handle Cancel button click here
+                    dialog.dismiss()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+
+            }
+
+            //GET RELEASE NOTIFY
+            ticketRepository.getCurrentActiveTicket(auth.currentUser!!.email!!){
+                if(it!=null){
+                    if(it.parkingId==parking.id){
+                        binding.btnReleaseSpot.visibility=View.VISIBLE
+                        binding.btnGetSpot.visibility=View.GONE
+                        binding.btnNotifyMe.visibility=View.GONE
+                        binding.tvNotify.visibility=View.GONE
+                        binding.tvAlreadyHasTicket.visibility=View.GONE
+
+                    }else{
+                        binding.btnReleaseSpot.visibility=View.GONE
+                        binding.btnGetSpot.visibility=View.GONE
+                        binding.btnNotifyMe.visibility=View.GONE
+                        binding.tvNotify.visibility=View.GONE
+                        binding.tvAlreadyHasTicket.visibility=View.VISIBLE
+                    }
+
+                }else{
+                    if(parking.currentCapacity==0){
+                        ticketRepository.checkIfUserIsWaiting(parking.id,auth.currentUser!!.email!!){
+                            if(it){
+                                binding.btnReleaseSpot.visibility=View.GONE
+                                binding.btnGetSpot.visibility=View.GONE
+                                binding.btnNotifyMe.visibility=View.GONE
+                                binding.tvNotify.visibility=View.VISIBLE
+                                binding.tvAlreadyHasTicket.visibility=View.GONE
+                            }else{
+                                binding.btnReleaseSpot.visibility=View.GONE
+                                binding.btnGetSpot.visibility=View.GONE
+                                binding.btnNotifyMe.visibility=View.VISIBLE
+                                binding.tvNotify.visibility=View.GONE
+                                binding.tvAlreadyHasTicket.visibility=View.GONE
+                            }
+                        }
+                    }else{
+                        binding.btnReleaseSpot.visibility=View.GONE
+                        binding.btnGetSpot.visibility=View.VISIBLE
+                        binding.btnNotifyMe.visibility=View.GONE
+                        binding.tvNotify.visibility=View.GONE
+                        binding.tvAlreadyHasTicket.visibility=View.GONE
+                    }
+
+                }
+            }
+
         }
     }
     override fun onDestroyView() {

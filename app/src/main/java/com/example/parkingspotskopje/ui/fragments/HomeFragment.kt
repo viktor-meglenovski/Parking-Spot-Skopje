@@ -1,5 +1,6 @@
 package com.example.parkingspotskopje.ui.fragments
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -8,12 +9,14 @@ import androidx.fragment.app.commit
 import com.example.parkingspotskopje.R
 import com.example.parkingspotskopje.databinding.FragmentHomeBinding
 import com.example.parkingspotskopje.domain.repository.ParkingRepository
+import com.example.parkingspotskopje.domain.repository.TicketRepository
 import com.example.parkingspotskopje.ui.activities.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val parkingRepository = ParkingRepository()
+    private val ticketRepository: TicketRepository = TicketRepository()
 
     private lateinit var auth: FirebaseAuth
     private var _binding:FragmentHomeBinding? = null
@@ -24,10 +27,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         auth = FirebaseAuth.getInstance()
 
-        val email = auth.currentUser?.email
+        val email = auth.currentUser?.email!!
         val name = auth.currentUser?.displayName
 
-        binding.textView.text="Welcome back "+email
+        binding.textView.text=name
 
         binding.signOutBtn.setOnClickListener{
             auth.signOut()
@@ -64,5 +67,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 addToBackStack(null)
             }
         }
+        binding.btnCurrentTicket.setOnClickListener{
+            ticketRepository.getCurrentActiveTicket(email){
+                if(it==null){
+                    val alertDialog = AlertDialog.Builder(context)
+                        .setTitle("No active ticket!")
+                        .setMessage("You do not have a currently active ticket")
+                        .setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .create()
+
+                    alertDialog.show()
+                }else{
+                    parentFragmentManager.commit {
+                        replace(R.id.fcv, CurrentTicketFragment())
+                        setReorderingAllowed(true)
+                        addToBackStack(null)
+                    }
+                }
+            }
+        }
     }
+
 }
