@@ -10,17 +10,21 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.parkingspotskopje.ui.activities.TicketActivity
+import com.example.parkingspotskopje.domain.model.Parking
+import com.example.parkingspotskopje.domain.repository.ParkingRepository
+import com.example.parkingspotskopje.ui.activities.ParkingActivity
 
-object NotificationScheduler {
+object NotificationSpotsScheduler {
 
     private var pendingIntent: PendingIntent? = null
-    private const val NOTIFICATION_CHANNEL_ID = "MyNotificationChannel"
-    private const val NOTIFICATION_ID = 123
+    private const val NOTIFICATION_CHANNEL_ID = "MyNotificationSpotsChannel"
+    private const val NOTIFICATION_ID = 1234
+    private var parkingObj: Parking? =null
+    private var parkingRepository:ParkingRepository = ParkingRepository()
 
     fun scheduleNotification(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val notificationIntent = Intent(context, NotificationReceiver::class.java)
+        val notificationIntent = Intent(context, NotificationSpotReceiver::class.java)
         pendingIntent = PendingIntent.getBroadcast(
             context,
             0,
@@ -28,8 +32,8 @@ object NotificationScheduler {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Set the alarm to trigger every 10 seconds
-        val intervalMillis = 10_000L
+        // Set the alarm to trigger every 15 seconds
+        val intervalMillis = 15_000L
         val triggerAtMillis = System.currentTimeMillis() + intervalMillis
 
         // Schedule the alarm
@@ -55,14 +59,12 @@ object NotificationScheduler {
         }
     }
 
-    class NotificationReceiver : BroadcastReceiver() {
+    class NotificationSpotReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             // Create and display the notification
             createNotificationChannel(context)
             showNotification(context)
 
-            // Schedule the next notification
-            scheduleNotification(context)
         }
     }
 
@@ -78,24 +80,32 @@ object NotificationScheduler {
     }
 
     private fun showNotification(context: Context) {
-        val actionIntent = Intent(context, TicketActivity::class.java)
-        // Create a PendingIntent for the action
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            actionIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle("Active Ticket!")
-            .setContentText("Tap to check it out!")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent) // Set the PendingIntent for the tap action
-            .setAutoCancel(true) // Close the notification when tapped
+        val actionIntent = Intent(context, ParkingActivity::class.java)
+        parkingRepository.getParking(parkingObj!!.id){
+            parkingObj=it
+            actionIntent.putExtra("parking",parkingObj)
+            // Create a PendingIntent for the action
+            val pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                actionIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+                .setContentTitle("Parking spot status!")
+                .setContentText("Tap to check it out!")
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent) // Set the PendingIntent for the tap action
+                .setAutoCancel(true) // Close the notification when tapped
 
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID, notificationBuilder.build())
+            with(NotificationManagerCompat.from(context)) {
+                notify(NOTIFICATION_ID, notificationBuilder.build())
+            }
         }
+
+    }
+    fun updateParking(parking:Parking){
+        parkingObj=parking
     }
 }

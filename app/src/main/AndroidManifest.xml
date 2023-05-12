@@ -58,6 +58,7 @@
                 android:value="" />
         </activity>
         <receiver android:name=".ui.notifications.NotificationScheduler$NotificationReceiver" />
+        <receiver android:name=".ui.notifications.NotificationSpotsScheduler$NotificationSpotReceiver" />
     </application>
 
 </manifest>

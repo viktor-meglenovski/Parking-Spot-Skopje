@@ -16,6 +16,7 @@ import com.example.parkingspotskopje.databinding.FragmentParkingBinding
 import com.example.parkingspotskopje.domain.repository.BookmarkRepository
 import com.example.parkingspotskopje.domain.repository.TicketRepository
 import com.example.parkingspotskopje.ui.notifications.NotificationScheduler
+import com.example.parkingspotskopje.ui.notifications.NotificationSpotsScheduler
 import com.example.parkingspotskopje.viewmodels.ParkingViewModel
 import com.google.firebase.auth.FirebaseAuth
 import org.osmdroid.config.Configuration
@@ -135,9 +136,6 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                 dialog.show()
             }
 
-
-
-
             binding.btnReleaseSpot.setOnClickListener(){
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Confirmation")
@@ -158,6 +156,25 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
 
+            }
+
+            binding.btnNotifyMe.setOnClickListener {
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Notification")
+                builder.setMessage("You will receive a notification regarding the status of empty spots at this parking in 15 minutes.")
+
+                builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+                    NotificationSpotsScheduler.updateParking(parking)
+                    NotificationSpotsScheduler.scheduleNotification(requireContext())
+                    dialog.dismiss()
+                }
+
+                builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+                    // Handle Cancel button click here
+                    dialog.dismiss()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
             }
 
             //GET RELEASE NOTIFY

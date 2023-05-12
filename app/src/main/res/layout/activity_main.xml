@@ -4,8 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     tools:context=".ui.activities.LoginActivity">
+    <TextView
+        android:id="@+id/welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="Welcome to ParkingSpotSkopje"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="40dp" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:foregroundGravity="center"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/welcome"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="The only app that allows you to find a parking spot easily!"
+        app:layout_constraintTop_toBottomOf="@+id/logo"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:layout_margin="20dp"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/text"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:layout_margin="30dp"
+        android:text="Continue by logging in with your Google account below!"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/gSignInBtn"
@@ -15,29 +60,15 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:text="Sign In"
-        android:textColor="@color/black"
         android:textStyle="bold"
-        app:backgroundTint="@color/white"
         app:icon="@drawable/googlelogo"
         app:iconGravity="start"
         app:iconPadding="4dp"
         app:iconSize="20dp"
-        app:iconTint="@color/black"
+        app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/gSignInBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/googlelogo" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

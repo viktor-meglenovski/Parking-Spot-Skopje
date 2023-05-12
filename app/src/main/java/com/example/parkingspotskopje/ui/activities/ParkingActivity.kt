@@ -45,5 +45,8 @@ class ParkingActivity : AppCompatActivity() {
             }
         })
     }
+    fun updateParking(parking: Parking){
+        parkingViewModel.setParking(parking)
+    }
 
 }
