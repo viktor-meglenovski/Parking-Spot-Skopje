@@ -15,6 +15,7 @@ import com.example.parkingspotskopje.R
 import com.example.parkingspotskopje.databinding.FragmentParkingBinding
 import com.example.parkingspotskopje.domain.repository.BookmarkRepository
 import com.example.parkingspotskopje.domain.repository.TicketRepository
+import com.example.parkingspotskopje.domain.repository.WaitingRepository
 import com.example.parkingspotskopje.ui.notifications.NotificationScheduler
 import com.example.parkingspotskopje.ui.notifications.NotificationSpotsScheduler
 import com.example.parkingspotskopje.viewmodels.ParkingViewModel
@@ -33,6 +34,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
     private val parkingViewModel: ParkingViewModel by activityViewModels()
     private val bookmarkRepository:BookmarkRepository=BookmarkRepository()
     private val ticketRepository:TicketRepository= TicketRepository()
+    private val waitingRepository:WaitingRepository= WaitingRepository()
     private lateinit var auth:FirebaseAuth
 
 
@@ -177,6 +179,25 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                 dialog.show()
             }
 
+            binding.btnNotifyMeWhenUserLeaves.setOnClickListener{
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Notification")
+                builder.setMessage("You will receive a notification when a user leaves a spot.")
+
+                builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+                    // ADD NEW ITEM IN WAITINGS - handle it with firebase
+                    waitingRepository.addWaitingItem(auth.currentUser!!.email!!,parking.id)
+                    dialog.dismiss()
+                }
+
+                builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+                    // Handle Cancel button click here
+                    dialog.dismiss()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
             //GET RELEASE NOTIFY
             ticketRepository.getCurrentActiveTicket(auth.currentUser!!.email!!){
                 if(it!=null){
@@ -186,6 +207,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         binding.btnNotifyMe.visibility=View.GONE
                         binding.tvNotify.visibility=View.GONE
                         binding.tvAlreadyHasTicket.visibility=View.GONE
+                        binding.btnNotifyMeWhenUserLeaves.visibility=View.GONE
 
                     }else{
                         binding.btnReleaseSpot.visibility=View.GONE
@@ -193,6 +215,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         binding.btnNotifyMe.visibility=View.GONE
                         binding.tvNotify.visibility=View.GONE
                         binding.tvAlreadyHasTicket.visibility=View.VISIBLE
+                        binding.btnNotifyMeWhenUserLeaves.visibility=View.GONE
                     }
 
                 }else{
@@ -204,10 +227,12 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                                 binding.btnNotifyMe.visibility=View.GONE
                                 binding.tvNotify.visibility=View.VISIBLE
                                 binding.tvAlreadyHasTicket.visibility=View.GONE
+                                binding.btnNotifyMeWhenUserLeaves.visibility=View.GONE
                             }else{
                                 binding.btnReleaseSpot.visibility=View.GONE
                                 binding.btnGetSpot.visibility=View.GONE
                                 binding.btnNotifyMe.visibility=View.VISIBLE
+                                binding.btnNotifyMeWhenUserLeaves.visibility=View.VISIBLE
                                 binding.tvNotify.visibility=View.GONE
                                 binding.tvAlreadyHasTicket.visibility=View.GONE
                             }
@@ -218,6 +243,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         binding.btnNotifyMe.visibility=View.GONE
                         binding.tvNotify.visibility=View.GONE
                         binding.tvAlreadyHasTicket.visibility=View.GONE
+                        binding.btnNotifyMeWhenUserLeaves.visibility=View.GONE
                     }
 
                 }

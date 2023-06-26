@@ -261,8 +261,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Notify my when a spot is free"
+            android:text="Notify me when a spot is free"
             app:layout_constraintTop_toBottomOf="@id/rlCurrCap" />
+
+        <Button
+            android:id="@+id/btnNotifyMeWhenUserLeaves"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Notify me when a user leaves"
+            app:layout_constraintTop_toBottomOf="@id/btnNotifyMe" />
         <TextView
             android:id="@+id/tvNotify"
             android:layout_width="match_parent"
