@@ -17,6 +17,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 /**
@@ -92,7 +93,7 @@ class LoginActivity : Activity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
-                    //registerDeviceForNotifications(user!!.email!!)
+                    registerDeviceForNotifications(user!!.email!!)
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -117,23 +118,23 @@ class LoginActivity : Activity() {
         }
     }
 
-//    private fun registerDeviceForNotifications(userId: String) {
-//        FirebaseMessaging.getInstance().token
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    val token = task.result
-//                    saveDeviceTokenInDatabase(userId, token)
-//
-//                } else {
-//                    // Handle token retrieval failure.
-//                }
-//            }
-//    }
+    private fun registerDeviceForNotifications(userId: String) {
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result
+                    saveDeviceTokenInDatabase(userId, token)
+
+                } else {
+                    // Handle token retrieval failure.
+                }
+            }
+    }
     private fun saveDeviceTokenInDatabase(userId: String, deviceToken: String?) {
         val database: FirebaseDatabase = FirebaseDatabase.getInstance()
         val usersRef: DatabaseReference = database.getReference("users")
 
-        val userTokenRef = usersRef.child(userId).child("deviceToken")
+        val userTokenRef = usersRef.child(userId.replace('.',',')).child("deviceToken")
         userTokenRef.setValue(deviceToken)
             .addOnSuccessListener {
                 // Device token saved successfully

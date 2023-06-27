@@ -1,9 +1,7 @@
 package com.example.parkingspotskopje.ui.fragments
 
-import android.app.AlarmManager
+
 import android.app.AlertDialog
-import android.app.PendingIntent
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -20,10 +18,13 @@ import com.example.parkingspotskopje.ui.notifications.NotificationScheduler
 import com.example.parkingspotskopje.ui.notifications.NotificationSpotsScheduler
 import com.example.parkingspotskopje.viewmodels.ParkingViewModel
 import com.google.firebase.auth.FirebaseAuth
+import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import java.io.IOException
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -148,6 +149,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         parkingViewModel.getParking(parking.id)
                     }
                     NotificationScheduler.cancelNotifications(requireContext())
+                    sendNotificationToUserWaiting(auth.currentUser!!.email!!, parking.id, parking.name)
                     dialog.dismiss()
                 }
 
@@ -254,5 +256,40 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
     override fun onDestroyView() {
         super.onDestroyView()
         binding.map.onDetach()
+    }
+    private fun sendNotificationToUserWaiting(senderUserId: String, parkingId: String, parkingName: String) {
+        val client = OkHttpClient()
+
+    // Build the URL with query parameters
+        val urlBuilder = "http://192.168.0.155:8080/api/sendReleasedSpotNotification".toHttpUrlOrNull()?.newBuilder()
+        urlBuilder?.addQueryParameter("senderUserId", senderUserId)
+        urlBuilder?.addQueryParameter("parkingId", parkingId)
+        urlBuilder?.addQueryParameter("parkingName", parkingName)
+        val url = urlBuilder?.build()
+
+    // Create the HTTP request
+        val request = Request.Builder()
+            .url(url!!)
+            .get()
+            .build()
+
+        // Send the request asynchronously
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Handle the request failure
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                // Handle the request response
+                if (response.isSuccessful) {
+                    // Notification request successful
+                    // Handle any further logic here
+                } else {
+                    // Notification request failed
+                    // Handle the failure case here
+                }
+            }
+        })
     }
 }
