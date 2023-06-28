@@ -1,9 +1,7 @@
 package com.example.parkingspotskopje.ui.fragments
 
-import android.app.AlarmManager
+
 import android.app.AlertDialog
-import android.app.PendingIntent
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -15,14 +13,18 @@ import com.example.parkingspotskopje.R
 import com.example.parkingspotskopje.databinding.FragmentParkingBinding
 import com.example.parkingspotskopje.domain.repository.BookmarkRepository
 import com.example.parkingspotskopje.domain.repository.TicketRepository
+import com.example.parkingspotskopje.domain.repository.WaitingRepository
 import com.example.parkingspotskopje.ui.notifications.NotificationScheduler
 import com.example.parkingspotskopje.ui.notifications.NotificationSpotsScheduler
 import com.example.parkingspotskopje.viewmodels.ParkingViewModel
 import com.google.firebase.auth.FirebaseAuth
+import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import java.io.IOException
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -33,6 +35,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
     private val parkingViewModel: ParkingViewModel by activityViewModels()
     private val bookmarkRepository:BookmarkRepository=BookmarkRepository()
     private val ticketRepository:TicketRepository= TicketRepository()
+    private val waitingRepository:WaitingRepository= WaitingRepository()
     private lateinit var auth:FirebaseAuth
 
 
@@ -146,6 +149,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         parkingViewModel.getParking(parking.id)
                     }
                     NotificationScheduler.cancelNotifications(requireContext())
+                    sendNotificationToUserWaiting(auth.currentUser!!.email!!, auth.currentUser!!.displayName!!, parking.id, parking.name)
                     dialog.dismiss()
                 }
 
@@ -177,6 +181,25 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                 dialog.show()
             }
 
+            binding.btnNotifyMeWhenUserLeaves.setOnClickListener{
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Notification")
+                builder.setMessage("You will receive a notification when a user leaves a spot.")
+
+                builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+                    // ADD NEW ITEM IN WAITINGS - handle it with firebase
+                    waitingRepository.addWaitingItem(auth.currentUser!!.email!!,parking.id)
+                    dialog.dismiss()
+                }
+
+                builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+                    // Handle Cancel button click here
+                    dialog.dismiss()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
             //GET RELEASE NOTIFY
             ticketRepository.getCurrentActiveTicket(auth.currentUser!!.email!!){
                 if(it!=null){
@@ -186,6 +209,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         binding.btnNotifyMe.visibility=View.GONE
                         binding.tvNotify.visibility=View.GONE
                         binding.tvAlreadyHasTicket.visibility=View.GONE
+                        binding.btnNotifyMeWhenUserLeaves.visibility=View.GONE
 
                     }else{
                         binding.btnReleaseSpot.visibility=View.GONE
@@ -193,6 +217,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         binding.btnNotifyMe.visibility=View.GONE
                         binding.tvNotify.visibility=View.GONE
                         binding.tvAlreadyHasTicket.visibility=View.VISIBLE
+                        binding.btnNotifyMeWhenUserLeaves.visibility=View.GONE
                     }
 
                 }else{
@@ -204,10 +229,12 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                                 binding.btnNotifyMe.visibility=View.GONE
                                 binding.tvNotify.visibility=View.VISIBLE
                                 binding.tvAlreadyHasTicket.visibility=View.GONE
+                                binding.btnNotifyMeWhenUserLeaves.visibility=View.GONE
                             }else{
                                 binding.btnReleaseSpot.visibility=View.GONE
                                 binding.btnGetSpot.visibility=View.GONE
                                 binding.btnNotifyMe.visibility=View.VISIBLE
+                                binding.btnNotifyMeWhenUserLeaves.visibility=View.VISIBLE
                                 binding.tvNotify.visibility=View.GONE
                                 binding.tvAlreadyHasTicket.visibility=View.GONE
                             }
@@ -218,6 +245,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         binding.btnNotifyMe.visibility=View.GONE
                         binding.tvNotify.visibility=View.GONE
                         binding.tvAlreadyHasTicket.visibility=View.GONE
+                        binding.btnNotifyMeWhenUserLeaves.visibility=View.GONE
                     }
 
                 }
@@ -228,5 +256,32 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
     override fun onDestroyView() {
         super.onDestroyView()
         binding.map.onDetach()
+    }
+    private fun sendNotificationToUserWaiting(senderUserId: String, senderUserName:String, parkingId: String, parkingName: String) {
+        val client = OkHttpClient()
+
+        // Build the URL with query parameters
+        val urlBuilder = "http://192.168.0.155:8080/api/sendReleasedSpotNotification".toHttpUrlOrNull()?.newBuilder()
+        urlBuilder?.addQueryParameter("senderUserId", senderUserId)
+        urlBuilder?.addQueryParameter("senderUserName", senderUserName)
+        urlBuilder?.addQueryParameter("parkingId", parkingId)
+        urlBuilder?.addQueryParameter("parkingName", parkingName)
+        val url = urlBuilder?.build()
+
+        // Create the HTTP request
+        val request = Request.Builder()
+            .url(url!!)
+            .get()
+            .build()
+
+        // Send the request asynchronously
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {} else {}
+            }
+        })
     }
 }

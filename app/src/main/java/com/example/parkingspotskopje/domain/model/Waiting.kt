@@ -7,6 +7,3 @@ data class Waiting(
     var userId:String = "",
     var timestamp: String=""
 ): Serializable
-{
-    var id:String = ""
-}

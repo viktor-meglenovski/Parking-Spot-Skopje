@@ -11,6 +11,7 @@ import com.example.parkingspotskopje.databinding.FragmentHomeBinding
 import com.example.parkingspotskopje.domain.repository.ParkingRepository
 import com.example.parkingspotskopje.domain.repository.TicketRepository
 import com.example.parkingspotskopje.ui.activities.LoginActivity
+import com.example.parkingspotskopje.ui.activities.ParkingBuddiesActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -87,6 +88,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
             }
+        }
+        binding.parkingBuddiesBtn.setOnClickListener{
+            startActivity(Intent(context,ParkingBuddiesActivity::class.java))
         }
     }
 
