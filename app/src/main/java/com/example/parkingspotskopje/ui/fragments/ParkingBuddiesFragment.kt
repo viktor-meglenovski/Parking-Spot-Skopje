@@ -42,7 +42,7 @@ class ParkingBuddiesFragment:Fragment(R.layout.fragment_parking_buddies) {
         parkingBuddiesListAdapter= ParkingBuddiesListAdapter(ArrayList<Buddy>(),cliker)
         binding.recyclerViewListBuddies.adapter=parkingBuddiesListAdapter
 
-        parkingBuddiesViewModel.buddiesList.observe(viewLifecycleOwner){
+        parkingBuddiesViewModel.getAllBuddiesForUser(auth.currentUser!!.email!!).observe(viewLifecycleOwner){
             parkingBuddiesListAdapter.updateList(it)
             if(parkingBuddiesListAdapter.itemCount==0){
                 binding.tvNoBuddiesMessage.visibility=View.VISIBLE

@@ -21,11 +21,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewConversation"
         android:layout_width="match_parent"
-        android:layout_height="520dp"
+        android:layout_height="match_parent"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="32dp"
-        android:background="#C6FDFF"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,25 +36,5 @@
         app:layout_constraintVertical_bias="0.027"
         app:reverseLayout="false"
         app:stackFromEnd="true" />
-
-    <Button
-        android:id="@+id/btnGoToParking"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Go to parking"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewConversation"/>
-
-    <Button
-        android:id="@+id/btnSayThanks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Say thanks!"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoToParking"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

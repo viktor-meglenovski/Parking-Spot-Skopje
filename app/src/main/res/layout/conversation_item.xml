@@ -3,7 +3,8 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginBottom="10dp">
+    android:layout_marginBottom="10dp"
+    android:id="@+id/container">
     <RelativeLayout
         android:id="@+id/rlRegion"
         android:layout_width="match_parent"
@@ -44,6 +45,15 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Content" />
-
     </RelativeLayout>
+    <Button
+        android:id="@+id/btnGoToParking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginTop="0dp"
+        android:text="Go to parking"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rlRating"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
