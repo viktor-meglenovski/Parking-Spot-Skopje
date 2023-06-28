@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.parkingspotskopje.R
-import org.w3c.dom.Text
 
 class ReviewViewHolder : RecyclerView.ViewHolder{
     var userId: TextView

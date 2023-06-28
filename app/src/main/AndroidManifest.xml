@@ -3,19 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:name="com.example.parkingspotskopje.MyParkingSkopje"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -25,7 +23,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ParkingSpotSkopje"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.activities.ConversationActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.activities.ParkingBuddiesActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".ui.activities.ParkingActivity"
             android:exported="false">
@@ -52,6 +65,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -59,8 +73,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <receiver android:name=".ui.notifications.NotificationScheduler$NotificationReceiver" />
         <receiver android:name=".ui.notifications.NotificationSpotsScheduler$NotificationSpotReceiver" />
+
         <service
             android:name="com.example.parkingspotskopje.api.MyFirebaseMessagingService"
             android:exported="false">
@@ -68,7 +84,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

@@ -149,7 +149,7 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
                         parkingViewModel.getParking(parking.id)
                     }
                     NotificationScheduler.cancelNotifications(requireContext())
-                    sendNotificationToUserWaiting(auth.currentUser!!.email!!, parking.id, parking.name)
+                    sendNotificationToUserWaiting(auth.currentUser!!.email!!, auth.currentUser!!.displayName!!, parking.id, parking.name)
                     dialog.dismiss()
                 }
 
@@ -257,17 +257,18 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
         super.onDestroyView()
         binding.map.onDetach()
     }
-    private fun sendNotificationToUserWaiting(senderUserId: String, parkingId: String, parkingName: String) {
+    private fun sendNotificationToUserWaiting(senderUserId: String, senderUserName:String, parkingId: String, parkingName: String) {
         val client = OkHttpClient()
 
-    // Build the URL with query parameters
+        // Build the URL with query parameters
         val urlBuilder = "http://192.168.0.155:8080/api/sendReleasedSpotNotification".toHttpUrlOrNull()?.newBuilder()
         urlBuilder?.addQueryParameter("senderUserId", senderUserId)
+        urlBuilder?.addQueryParameter("senderUserName", senderUserName)
         urlBuilder?.addQueryParameter("parkingId", parkingId)
         urlBuilder?.addQueryParameter("parkingName", parkingName)
         val url = urlBuilder?.build()
 
-    // Create the HTTP request
+        // Create the HTTP request
         val request = Request.Builder()
             .url(url!!)
             .get()
@@ -276,19 +277,10 @@ class ParkingFragment:Fragment(R.layout.fragment_parking) {
         // Send the request asynchronously
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                // Handle the request failure
                 e.printStackTrace()
             }
-
             override fun onResponse(call: Call, response: Response) {
-                // Handle the request response
-                if (response.isSuccessful) {
-                    // Notification request successful
-                    // Handle any further logic here
-                } else {
-                    // Notification request failed
-                    // Handle the failure case here
-                }
+                if (response.isSuccessful) {} else {}
             }
         })
     }
