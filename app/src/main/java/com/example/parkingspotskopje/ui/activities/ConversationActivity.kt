@@ -7,12 +7,11 @@ import androidx.fragment.app.commit
 import com.example.parkingspotskopje.R
 import com.example.parkingspotskopje.domain.model.Buddy
 import com.example.parkingspotskopje.ui.fragments.ConversationFragment
-import com.example.parkingspotskopje.ui.fragments.ParkingBuddiesFragment
-import com.example.parkingspotskopje.viewmodels.ParkingBuddiesViewModel
+import com.example.parkingspotskopje.viewmodels.ParkingBuddyViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class ConversationActivity : AppCompatActivity() {
-    private val buddiesViewModel:ParkingBuddiesViewModel by viewModels()
+    private val buddyViewModel: ParkingBuddyViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversation)
@@ -20,8 +19,8 @@ class ConversationActivity : AppCompatActivity() {
         val buddyId=intent.getSerializableExtra("buddyId") as String
         var auth = FirebaseAuth.getInstance()
 
-        buddiesViewModel.setBuddy(buddy)
-        buddiesViewModel.getAllMessages(auth.currentUser!!.email!!,buddyId)
+        buddyViewModel.setBuddy(buddy)
+        buddyViewModel.getAllMessages(auth.currentUser!!.email!!,buddyId)
 
         if (savedInstanceState==null) {
             if (savedInstanceState==null) {
