@@ -34,7 +34,7 @@ class ParkingBuddyViewModel:ViewModel() {
     fun addMessage(senderId:String, receiverId:String, senderName:String, receiverName:String, content:String,parkingId:String){
         buddiesRepository.saveMessageBetweenTwoUsers(senderId.replace('.',','),receiverId.replace('.',','),senderName,receiverName,content,parkingId){
             getBuddy(senderId,receiverId)
-            getAllMessages(senderId,receiverId)
+            messagesLiveData.postValue(it)
         }
     }
 }
