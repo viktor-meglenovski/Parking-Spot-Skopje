@@ -64,7 +64,7 @@ class BuddiesRepository {
         }
     }
 
-    fun saveMessageBetweenTwoUsers(senderId:String, receiverId:String, senderName:String, receiverName:String, content:String, parkingId:String, callback: (Boolean) -> Unit){
+    fun saveMessageBetweenTwoUsers(senderId:String, receiverId:String, senderName:String, receiverName:String, content:String, parkingId:String, callback: (List<Message>) -> Unit){
         //makeTwoUsersBuddies(senderId,receiverId, senderName,receiverName)
         val currentDate = Date()
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm")
@@ -98,12 +98,13 @@ class BuddiesRepository {
                 }
                 messages.add(message)
                 receiverMessagesRef.setValue(messages)
+                callback(messages)
             }
 
             override fun onCancelled(error: DatabaseError) {
                 // Handle onCancelled event
             }
         })
-        callback(true)
+        callback(emptyList())
     }
 }
